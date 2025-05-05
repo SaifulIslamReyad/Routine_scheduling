@@ -8,7 +8,8 @@ from openpyxl.styles import Alignment, PatternFill
 from collections import defaultdict
 # /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-FILENAME = "teacher_preferences2.json"
+
+FILENAME = "teacher_preferences.json"
 
 if os.path.exists(FILENAME):
     with open(FILENAME, "r") as f:
