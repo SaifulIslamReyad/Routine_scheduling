@@ -6,7 +6,7 @@ import openpyxl
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import Alignment, PatternFill
 from collections import defaultdict
-# /////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 FILENAME = "teacher_preferences2.json"
 
@@ -20,9 +20,9 @@ DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"]
 SLOTS = list(range(1, 8))
 
 root = tk.Tk()
-root.title("Teacher Preferences Grid")
+root.title("Teacher Preferences")
 
-tk.Label(root, text="Professor Name:").grid(row=0, column=0, columnspan=2, pady=5)
+tk.Label(root, text="Teacher Name:").grid(row=0, column=0, columnspan=2, pady=5)
 name_entry = tk.Entry(root)
 name_entry.grid(row=0, column=2, columnspan=5, pady=5, sticky="we")
 
@@ -56,7 +56,7 @@ def save_to_json():
         return
 
     sorted_prefs = sorted(list(selected_cells), key=lambda x: (DAYS.index(x[0]), x[1]))
-    preferences[f"Prof. {name}"] = sorted_prefs
+    preferences[f"{name}"] = sorted_prefs
 
     with open(FILENAME, "w") as f:
         json.dump(preferences, f, indent=2)
@@ -86,43 +86,35 @@ courses.sort(key=lambda c: teacher_rank.get(c["teacher"], float("inf")))
 
 
 def can_assign(teacher, year, day, slot):  return ( routine[year][day][slot] is None and slot not in teacher_schedule[teacher][day] )
-def reassign_slot(day, slot, requesting_teacher):
-    existing = None
-    for year in routine:
-        if routine[year][day][slot] is not None:
-            course_code, current_teacher = routine[year][day][slot]
-            if current_teacher != requesting_teacher:
-                existing = (year, course_code, current_teacher)
-                break
-    if not existing:
+def reassign_slot(year, day, slot, requesting_teacher):
+    assignment = routine[year][day][slot]
+    if assignment is None or assignment[1] == requesting_teacher:
         return True  
 
-    year, course_code, current_teacher = existing
+    course_code, current_teacher = assignment
     prefs = teacher_preferences.get(current_teacher, [])
 
     for new_day, new_slot in prefs:
         if new_day == day and new_slot == slot:
-            continue  
+            continue
 
         if can_assign(current_teacher, year, new_day, new_slot):
-            routine[year][day][slot] = None
-            teacher_schedule[current_teacher][day].remove(slot)
-
-            routine[year][new_day][new_slot] = (course_code, current_teacher)
-            teacher_schedule[current_teacher][new_day].add(new_slot)
+            _move_assignment(year, day, slot, new_day, new_slot, course_code, current_teacher)
             return True
 
-        if reassign_slot(new_day, new_slot, current_teacher):
+        if reassign_slot(year, new_day, new_slot, current_teacher):
             if can_assign(current_teacher, year, new_day, new_slot):
-                routine[year][day][slot] = None
-                teacher_schedule[current_teacher][day].remove(slot)
-
-                routine[year][new_day][new_slot] = (course_code, current_teacher)
-                teacher_schedule[current_teacher][new_day].add(new_slot)
+                _move_assignment(year, day, slot, new_day, new_slot, course_code, current_teacher)
                 return True
 
-    return False
+    return False 
 
+def _move_assignment(year, old_day, old_slot, new_day, new_slot, course_code, teacher):
+    routine[year][old_day][old_slot] = None
+    teacher_schedule[teacher][old_day].remove(old_slot)
+
+    routine[year][new_day][new_slot] = (course_code, teacher)
+    teacher_schedule[teacher][new_day].add(new_slot)
 
 def assign_course(course):
     year = course["year"]
@@ -135,8 +127,19 @@ def assign_course(course):
     for day, slot in prefs:
         if assigned >= credits:
             return
+            return
 
         if can_assign(teacher, year, day, slot):
+            routine[year][day][slot] = (code, teacher)
+            teacher_schedule[teacher][day].add(slot)
+            assigned += 1
+
+
+    for day, slot in prefs:
+        if assigned >= credits:
+            return
+        
+        if reassign_slot(year,day, slot, teacher):
             routine[year][day][slot] = (code, teacher)
             teacher_schedule[teacher][day].add(slot)
             assigned += 1
@@ -152,10 +155,10 @@ def assign_course(course):
             assigned += 1
 
     if assigned < credits:
-        print(f"⚠️ Warning: Could not fully assign {code} for {teacher}!")
+        print(f"⚠ Warning: Could not fully assign {code} for {teacher}!")
 
-for course in courses: assign_course(course)
 
+# ////////////////////////////////////////////////////////////////////////////////////////////////
 def printing():
     slot_timings = {1: "9:00-10:00", 2: "10:00-11:00", 3: "11:00-12:00", 4: "12:00-1:00", 5: "2:00-3:00", 6: "3:00-4:00", 7: "4:00-5:00"}
     year_colors = {1: "D9E1F2", 2: "E2EFDA", 3: "FFF2CC", 4: "FCE4D6"}
@@ -189,8 +192,9 @@ def printing():
     wb.save("routine_final.xlsx")
     print("\n 💕 Final Routine with Time Slots saved as 'routine_final.xlsx'!")
 
-if __name__ == "__main__":
-    printing()
+
+for course in courses: assign_course(course)
+printing()
 
 
 

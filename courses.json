@@ -1,6 +1,6 @@
 [
     {"year": 1, "code": "CSE 1100", "credit": 3, "teacher": "Prof. G"},
-    {"year": 1, "code": "CSE 1101", "credit": 1, "teacher": "Prof. H"},
+    {"year": 1, "code": "CSE 1101", "credit": 3, "teacher": "Prof. H"},
     {"year": 1, "code": "CSE 1103", "credit": 3, "teacher": "Prof. I"},
     {"year": 1, "code": "CSE 1104", "credit": 2, "teacher": "Prof. J"},
     {"year": 1, "code": "CSE 1105", "credit": 3, "teacher": "Prof. A"},
