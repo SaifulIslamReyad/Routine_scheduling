@@ -153,7 +153,6 @@ def assign_course(course):
 import openpyxl
 from openpyxl.styles import Alignment, PatternFill, Border, Side
 from openpyxl.utils import get_column_letter
-
 def printing():
     slot_timings = {
         1: "9:00-10:00", 2: "10:00-11:00", 3: "11:00-12:00",
@@ -199,9 +198,9 @@ def printing():
                     code, teacher = entry
                     value = f"{code} ({teacher})"
                 else:
-                    value = ""
+                    value = "-"  # Prevent merging of truly empty cells
                 cell = ws.cell(row=current_row, column=2 + slot, value=value)
-                if value == "":
+                if value.strip() == "-":
                     cell.fill = free_fill
                 else:
                     cell.fill = PatternFill(start_color=year_colors[year], end_color=year_colors[year], fill_type="solid")
@@ -217,15 +216,15 @@ def printing():
 
         current_row += 1
 
-    # Merge horizontally adjacent same-value cells row-wise
+    # Merge only non-empty, matching cells
     for row in ws.iter_rows(min_row=2, max_row=ws.max_row):
         col = 3
         while col <= 9:
             start_col = col
             value = row[col - 1].value
-            while col + 1 <= 9 and row[col].value == value :
+            while col + 1 <= 9 and row[col].value == value and value!= "-":
                 col += 1
-            if col > start_col :
+            if col > start_col:
                 ws.merge_cells(
                     start_row=row[0].row, start_column=start_col,
                     end_row=row[0].row, end_column=col
@@ -233,11 +232,6 @@ def printing():
                 merged_cell = ws.cell(row=row[0].row, column=start_col)
                 merged_cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
             col += 1
-
-    # Apply borders to all cells
-    for row in ws.iter_rows(min_row=1, max_row=ws.max_row, min_col=1, max_col=9):
-        for cell in row:
-            cell.border = thin_border
 
     # Set column widths
     for col in range(1, 10):

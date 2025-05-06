@@ -1,27 +1,72 @@
 {
+    "Prof. H": [
+      ["Sunday", 5],
+      ["Sunday", 6],
+      ["Sunday", 7],
+      ["Monday", 5],
+      ["Monday", 6],
+      ["Monday", 7]
+
+      
+    ],
+    "Prof. A": [
+      ["Sunday", 5],
+      ["Sunday", 6],
+      ["Sunday", 7]
+    ],
+    "Prof. B": [
+      ["Wednesday", 5],
+      ["Wednesday", 6],
+      ["Wednesday", 7] 
+    ],
+    "Prof. D": [
+      ["Thursday", 5],
+      ["Thursday", 6],
+      ["Thursday", 7]
+    ],
+    "Prof. F": [
+      ["Tuesday", 5],
+      ["Tuesday", 6],
+      ["Tuesday", 7]
+
+    ],
+
+
+
+
+
     "Prof. G": [
       ["Sunday", 1],
       ["Monday", 2],
       ["Tuesday", 3]
     ],
-    "Prof. H": [
-      ["Sunday", 1],
-      ["Monday", 2],
-      ["Tuesday", 3],
-      ["Monday", 1],
-      ["Tuesday", 2],
-      ["Wednesday", 3],
-      ["Sunday",3]
-      
-    ],
     "Prof. I": [
+      ["Sunday", 3],
+      ["Monday", 4],
+      ["Tuesday", 1],
       ["Wednesday", 3],
       ["Wednesday", 2],
-      ["Thursday", 3]
+      ["Thursday", 1]
     ],
     "Prof. J": [
+      ["Sunday", 2],
+      ["Wednesday", 3],
+      ["Wednesday", 2],
+      ["Thursday", 1],
+      ["Thursday", 2]
+    ],
+    "Prof. C": [
+      ["Monday", 1],
+      ["Tuesday", 2],
+      ["Wednesday", 4],
+      ["Thursday", 3],
+      ["Wednesday", 1]
+    ],
+    "Prof. E": [
+      ["Monday", 3],
+      ["Tuesday", 4],
+      ["Thursday", 1],
       ["Wednesday", 1],
-      ["Thursday", 2],
-      ["Sunday", 3]
+      ["Thursday", 4]
     ]
   }
