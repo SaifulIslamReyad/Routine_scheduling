@@ -138,7 +138,7 @@ def assign_course(course):
         if assigned >= credits:
             return
         
-        if reassign_slot(day, slot, teacher):
+        if reassign_slot(year,day, slot, teacher):
             routine[year][day][slot] = (code, teacher)
             teacher_schedule[teacher][day].add(slot)
             assigned += 1

@@ -1,0 +1,206 @@
+{
+    "Prof. G": [
+      ["Sunday", 1],
+      ["Monday", 2],
+      ["Tuesday", 3]
+    ],
+    "Prof. H": [
+      ["Monday", 1],
+      ["Tuesday", 2],
+      ["Wednesday", 3]
+    ],
+    "Prof. I": [
+      ["Tuesday", 1],
+      ["Wednesday", 2],
+      ["Thursday", 3]
+    ],
+    "Prof. J": [
+      ["Wednesday", 1],
+      ["Thursday", 2],
+      ["Sunday", 3]
+    ],
+    
+    "Prof. A": [
+      ["Thursday", 1],
+      ["Sunday", 2],
+      ["Monday", 3]
+    ],
+    "Prof. B": [
+      ["Sunday", 4],
+      ["Monday", 5],
+      ["Tuesday", 6]
+    ],
+    "Prof. C": [
+      ["Monday", 4],
+      ["Tuesday", 5],
+      ["Wednesday", 6]
+    ],
+    "Prof. D": [
+      ["Tuesday", 4],
+      ["Wednesday", 5],
+      ["Thursday", 6]
+    ],
+    "Prof. E": [
+      ["Wednesday", 4],
+      ["Thursday", 5],
+      ["Sunday", 6]
+    ],
+    "Prof. F": [
+      ["Thursday", 4],
+      ["Sunday", 5],
+      ["Monday", 6]
+      ],
+                "Prof. GG": [
+                  ["Sunday", 1],
+                  ["Monday", 2],
+                  ["Tuesday", 3]
+                ],
+                "Prof. HH": [
+                  ["Monday", 1],
+                  ["Tuesday", 2],
+                  ["Wednesday", 3]
+                ],
+                "Prof. II": [
+                  ["Tuesday", 1],
+                  ["Wednesday", 2],
+                  ["Thursday", 3]
+                ],
+                "Prof. JJ": [
+                  ["Wednesday", 1],
+                  ["Thursday", 2],
+                  ["Sunday", 3]
+                ],
+                "Prof. AA": [
+                  ["Thursday", 1],
+                  ["Sunday", 2],
+                  ["Monday", 3]
+                ],
+                "Prof. BB": [
+                  ["Sunday", 4],
+                  ["Monday", 5],
+                  ["Tuesday", 6]
+                ],
+                "Prof. CC": [
+                  ["Monday", 4],
+                  ["Tuesday", 5],
+                  ["Wednesday", 6]
+                ],
+                "Prof. DD": [
+                  ["Tuesday", 4],
+                  ["Wednesday", 5],
+                  ["Thursday", 6]
+                ],
+                "Prof. EE": [
+                  ["Wednesday", 4],
+                  ["Thursday", 5],
+                  ["Sunday", 6]
+                ],
+                "Prof. FF": [
+                  ["Thursday", 4],
+                  ["Sunday", 5],
+                  ["Monday", 6]
+                ],
+                                  "Prof. GGG": [
+                                  ["Sunday", 1],
+                                  ["Monday", 2],
+                                  ["Tuesday", 3]
+                                ],
+                                "Prof. HHH": [
+                                  ["Monday", 1],
+                                  ["Tuesday", 2],
+                                  ["Wednesday", 3]
+                                ],
+                                "Prof. III": [
+                                  ["Tuesday", 1],
+                                  ["Wednesday", 2],
+                                  ["Thursday", 3]
+                                ],
+                                "Prof. JJJ": [
+                                  ["Wednesday", 1],
+                                  ["Thursday", 2],
+                                  ["Sunday", 3]
+                                ],
+                                "Prof. AAA": [
+                                  ["Thursday", 1],
+                                  ["Sunday", 2],
+                                  ["Monday", 3]
+                                ],
+                                "Prof. BBB": [
+                                  ["Sunday", 4],
+                                  ["Monday", 5],
+                                  ["Tuesday", 6]
+                                ],
+                                "Prof. CCC": [
+                                  ["Monday", 4],
+                                  ["Tuesday", 5],
+                                  ["Wednesday", 6]
+                                ],
+                                "Prof. DDD": [
+                                  ["Tuesday", 4],
+                                  ["Wednesday", 5],
+                                  ["Thursday", 6]
+                                ],
+                                "Prof. EEE": [
+                                  ["Wednesday", 4],
+                                  ["Thursday", 5],
+                                  ["Sunday", 6]
+                                ],
+                                "Prof. FFF": [
+                                  ["Thursday", 4],
+                                  ["Sunday", 5],
+                                  ["Monday", 6]
+                                  ],
+                                              "Prof. GGGG": [
+                                                ["Sunday", 1],
+                                                ["Monday", 2],
+                                                ["Tuesday", 3]
+                                              ],
+                                              "Prof. HHHH": [
+                                                ["Monday", 1],
+                                                ["Tuesday", 2],
+                                                ["Wednesday", 3]
+                                              ],
+                                              "Prof. IIII": [
+                                                ["Tuesday", 1],
+                                                ["Wednesday", 2],
+                                                ["Thursday", 3]
+                                              ],
+                                              "Prof. JJJJ": [
+                                                ["Wednesday", 1],
+                                                ["Thursday", 2],
+                                                ["Sunday", 3]
+                                              ],
+                                              "Prof. AAAA": [
+                                                ["Thursday", 1],
+                                                ["Sunday", 2],
+                                                ["Monday", 3]
+                                              ],
+                                              "Prof. BBBB": [
+                                                ["Sunday", 4],
+                                                ["Monday", 5],
+                                                ["Tuesday", 6]
+                                              ],
+                                              "Prof. CCCC": [
+                                                ["Monday", 4],
+                                                ["Tuesday", 5],
+                                                ["Wednesday", 6]
+                                              ],
+                                              "Prof. DDDD": [
+                                                ["Tuesday", 4],
+                                                ["Wednesday", 5],
+                                                ["Thursday", 6]
+                                              ],
+                                              "Prof. EEEE": [
+                                                ["Wednesday", 4],
+                                                ["Thursday", 5],
+                                                ["Sunday", 6]
+                                              ],
+                                              "Prof. FFFF": [
+                                                ["Thursday", 4],
+                                                ["Sunday", 5],
+                                                ["Monday", 6]
+                                                ]   
+                         
+                          
+    }
+    
