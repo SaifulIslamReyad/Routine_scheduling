@@ -126,20 +126,25 @@ def assign_course(course):
 
     for day, slot in prefs:
         if assigned >= credits:
-            break
+            return
 
         if can_assign(teacher, year, day, slot):
             routine[year][day][slot] = (code, teacher)
             teacher_schedule[teacher][day].add(slot)
             assigned += 1
-        else:
-            if reassign_slot(year, day, slot, teacher):
-                routine[year][day][slot] = (code, teacher)
-                teacher_schedule[teacher][day].add(slot)
-                assigned += 1
+
+
+    for day, slot in prefs:
+        if assigned >= credits:
+            return
+        
+        if reassign_slot(day, slot, teacher):
+            routine[year][day][slot] = (code, teacher)
+            teacher_schedule[teacher][day].add(slot)
+            assigned += 1
 
     if assigned < credits:
-        print(f"⚠️ Warning: Could not fully assign {code} for {teacher}!")
+        print(f"⚠ Warning: Could not fully assign {code} for {teacher}!")
 
 
 # ////////////////////////////////////////////////////////////////////////////////////////////////
