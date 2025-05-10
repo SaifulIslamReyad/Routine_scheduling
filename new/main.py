@@ -32,45 +32,61 @@ slot_timings = {
     4: "12:00-1:00", 5: "2:00-3:00", 6: "3:00-4:00", 7: "4:00-5:00"
 }
 
-# Main UI
+# Main window
 root = tk.Tk()
-root.title("Teacher Preferences and Course Input")
+root.title("Teacher Preferences & Course Info")
+root.geometry("1000x600")
+root.configure(bg="#f0f4f7")
 
-# Inputs: Teacher name & rank
-tk.Label(root, text="Teacher Name:").grid(row=0, column=0)
-name_entry = tk.Entry(root)
-name_entry.grid(row=0, column=1)
+title = tk.Label(root, text="Teacher Preferences & Course Entry", font=("Helvetica", 16, "bold"), bg="#f0f4f7", fg="#003366")
+title.pack(pady=10)
 
-tk.Label(root, text="Rank:").grid(row=0, column=2)
-rank_entry = tk.Entry(root, width=5)
-rank_entry.grid(row=0, column=3)
+form_frame = tk.Frame(root, bg="#f0f4f7")
+form_frame.pack(pady=10)
 
-# Inputs: Course info
-tk.Label(root, text="Year:").grid(row=1, column=0)
-year_entry = tk.Entry(root, width=5)
-year_entry.grid(row=1, column=1)
+# --- Teacher Info Section ---
+teacher_frame = tk.LabelFrame(form_frame, text="Teacher Info", font=("Helvetica", 11, "bold"), padx=10, pady=10, bg="#e8f0fe")
+teacher_frame.grid(row=0, column=0, padx=10, sticky="ew")
 
-tk.Label(root, text="Course:").grid(row=1, column=2)
-course_entry = tk.Entry(root)
-course_entry.grid(row=1, column=3)
+tk.Label(teacher_frame, text="Teacher Name:", bg="#e8f0fe").grid(row=0, column=0, sticky="e", padx=5, pady=5)
+name_entry = tk.Entry(teacher_frame, width=25)
+name_entry.grid(row=0, column=1, padx=5, pady=5)
 
-tk.Label(root, text="Code:").grid(row=1, column=4)
-code_entry = tk.Entry(root)
-code_entry.grid(row=1, column=5)
+tk.Label(teacher_frame, text="Rank:", bg="#e8f0fe").grid(row=0, column=2, sticky="e", padx=5, pady=5)
+rank_entry = tk.Entry(teacher_frame, width=8)
+rank_entry.grid(row=0, column=3, padx=5, pady=5)
 
-tk.Label(root, text="Credit:").grid(row=1, column=6)
-credit_entry = tk.Entry(root, width=5)
-credit_entry.grid(row=1, column=7)
+# --- Course Info Section ---
+course_frame = tk.LabelFrame(form_frame, text="Course Info", font=("Helvetica", 11, "bold"), padx=10, pady=10, bg="#e8f0fe")
+course_frame.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
 
-# Slot header row
-tk.Label(root, text="").grid(row=2, column=0)
+tk.Label(course_frame, text="Year:", bg="#e8f0fe").grid(row=0, column=0, padx=5, pady=5)
+year_entry = tk.Entry(course_frame, width=5)
+year_entry.grid(row=0, column=1, padx=5, pady=5)
+
+tk.Label(course_frame, text="Course Title:", bg="#e8f0fe").grid(row=0, column=2, padx=5, pady=5)
+course_entry = tk.Entry(course_frame, width=25)
+course_entry.grid(row=0, column=3, padx=5, pady=5)
+
+tk.Label(course_frame, text="Course Code:", bg="#e8f0fe").grid(row=0, column=4, padx=5, pady=5)
+code_entry = tk.Entry(course_frame, width=15)
+code_entry.grid(row=0, column=5, padx=5, pady=5)
+
+tk.Label(course_frame, text="Credit:", bg="#e8f0fe").grid(row=0, column=6, padx=5, pady=5)
+credit_entry = tk.Entry(course_frame, width=5)
+credit_entry.grid(row=0, column=7, padx=5, pady=5)
+
+# --- Slot Preferences ---
+slot_frame = tk.LabelFrame(root, text="Preferred Time Slots", font=("Helvetica", 11, "bold"), padx=10, pady=10, bg="#e8f0fe")
+slot_frame.pack(padx=10, pady=10)
+
+tk.Label(slot_frame, text="", bg="#e8f0fe").grid(row=0, column=0)
 for j, slot in enumerate(SLOTS):
-    tk.Label(root, text=slot_timings[slot], font=("Arial", 9, "bold")).grid(row=2, column=j + 1)
+    tk.Label(slot_frame, text=slot_timings[slot], bg="#e8f0fe", font=("Arial", 9, "bold")).grid(row=0, column=j + 1, padx=4, pady=4)
 
 selected_cells = set()
 buttons = {}
 
-# Time slot buttons
 def toggle_cell(day, slot, btn):
     key = (day, slot)
     if key in selected_cells:
@@ -81,14 +97,14 @@ def toggle_cell(day, slot, btn):
         btn.config(bg="lightgreen")
 
 for i, day in enumerate(DAYS):
-    tk.Label(root, text=day).grid(row=i + 3, column=0)
+    tk.Label(slot_frame, text=day, bg="#e8f0fe", font=("Arial", 10)).grid(row=i + 1, column=0, padx=5, pady=3)
     for j, slot in enumerate(SLOTS):
-        btn = tk.Button(root, text=str(slot), width=6,
+        btn = tk.Button(slot_frame, text=str(slot), width=6,
                         command=lambda d=day, s=slot: toggle_cell(d, s, buttons[(d, s)]))
-        btn.grid(row=i + 3, column=j + 1)
+        btn.grid(row=i + 1, column=j + 1, padx=2, pady=2)
         buttons[(day, slot)] = btn
 
-# Clear fields
+# Clear all input fields
 def clear_all():
     name_entry.delete(0, tk.END)
     rank_entry.delete(0, tk.END)
@@ -100,7 +116,7 @@ def clear_all():
         buttons[key].config(bg="SystemButtonFace")
     selected_cells.clear()
 
-# Save all data
+# Save data
 def save_all():
     name = name_entry.get().strip()
     rank = rank_entry.get().strip()
@@ -110,7 +126,7 @@ def save_all():
     credit = credit_entry.get().strip()
 
     if not name or not rank:
-        messagebox.showerror("Error", "Enter both teacher name and rank.")
+        messagebox.showerror("Error", "Please enter both teacher name and rank.")
         return
 
     try:
@@ -148,11 +164,15 @@ def save_all():
             messagebox.showerror("Error", "Invalid year or credit format.")
             return
 
-    messagebox.showinfo("Success", f"All data saved for {name}")
+    messagebox.showinfo("Success", f"Data saved for {name}")
     clear_all()
 
 # Save button
-tk.Button(root, text="Save All", command=save_all).grid(row=10, column=0, columnspan=8, pady=10)
+btn_frame = tk.Frame(root, bg="#f0f4f7")
+btn_frame.pack(pady=10)
+
+tk.Button(btn_frame, text="Save All", command=save_all, bg="#0066cc", fg="white",
+          font=("Helvetica", 11), padx=20, pady=5).pack()
 
 root.mainloop()
 
