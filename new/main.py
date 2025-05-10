@@ -2,35 +2,75 @@ import tkinter as tk
 from tkinter import messagebox
 import os
 import json
-import openpyxl
-from openpyxl.utils import get_column_letter
-from openpyxl.styles import Alignment, PatternFill
-from collections import defaultdict
-from openpyxl.styles.borders import Border, Side
 
+# File paths
+PREF_FILE = "teacher_preferences.json"
+RANK_FILE = "teacher_rank.json"
+COURSE_FILE = "courses.json"
 
-
-FILENAME = "teacher_preferences2.json"
-
-if os.path.exists(FILENAME):
-    with open(FILENAME, "r") as f:
+# Load existing data
+preferences = {}
+if os.path.exists(PREF_FILE):
+    with open(PREF_FILE, "r") as f:
         preferences = json.load(f)
-else:
-    preferences = {}
 
+teacher_ranks = {}
+if os.path.exists(RANK_FILE):
+    with open(RANK_FILE, "r") as f:
+        teacher_ranks = json.load(f)
+
+courses = []
+if os.path.exists(COURSE_FILE):
+    with open(COURSE_FILE, "r") as f:
+        courses = json.load(f)
+
+# Constants
 DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"]
 SLOTS = list(range(1, 8))
+slot_timings = {
+    1: "9:00-10:00", 2: "10:00-11:00", 3: "11:00-12:00",
+    4: "12:00-1:00", 5: "2:00-3:00", 6: "3:00-4:00", 7: "4:00-5:00"
+}
 
+# Main UI
 root = tk.Tk()
-root.title("Teacher Preferences")
+root.title("Teacher Preferences and Course Input")
 
-tk.Label(root, text="Teacher Name:").grid(row=0, column=0, columnspan=2, pady=5)
+# Inputs: Teacher name & rank
+tk.Label(root, text="Teacher Name:").grid(row=0, column=0)
 name_entry = tk.Entry(root)
-name_entry.grid(row=0, column=2, columnspan=5, pady=5, sticky="we")
+name_entry.grid(row=0, column=1)
+
+tk.Label(root, text="Rank:").grid(row=0, column=2)
+rank_entry = tk.Entry(root, width=5)
+rank_entry.grid(row=0, column=3)
+
+# Inputs: Course info
+tk.Label(root, text="Year:").grid(row=1, column=0)
+year_entry = tk.Entry(root, width=5)
+year_entry.grid(row=1, column=1)
+
+tk.Label(root, text="Course:").grid(row=1, column=2)
+course_entry = tk.Entry(root)
+course_entry.grid(row=1, column=3)
+
+tk.Label(root, text="Code:").grid(row=1, column=4)
+code_entry = tk.Entry(root)
+code_entry.grid(row=1, column=5)
+
+tk.Label(root, text="Credit:").grid(row=1, column=6)
+credit_entry = tk.Entry(root, width=5)
+credit_entry.grid(row=1, column=7)
+
+# Slot header row
+tk.Label(root, text="").grid(row=2, column=0)
+for j, slot in enumerate(SLOTS):
+    tk.Label(root, text=slot_timings[slot], font=("Arial", 9, "bold")).grid(row=2, column=j + 1)
 
 selected_cells = set()
 buttons = {}
 
+# Time slot buttons
 def toggle_cell(day, slot, btn):
     key = (day, slot)
     if key in selected_cells:
@@ -41,41 +81,82 @@ def toggle_cell(day, slot, btn):
         btn.config(bg="lightgreen")
 
 for i, day in enumerate(DAYS):
-    tk.Label(root, text=day).grid(row=i + 1, column=0, padx=5)
+    tk.Label(root, text=day).grid(row=i + 3, column=0)
     for j, slot in enumerate(SLOTS):
         btn = tk.Button(root, text=str(slot), width=6,
                         command=lambda d=day, s=slot: toggle_cell(d, s, buttons[(d, s)]))
-        btn.grid(row=i + 1, column=j + 1, padx=2, pady=2)
+        btn.grid(row=i + 3, column=j + 1)
         buttons[(day, slot)] = btn
 
-def save_to_json():
-    name = name_entry.get().strip()
-    if not name:
-        messagebox.showerror("Error", "Enter Teacher name.")
-        return
-    if not selected_cells:
-        messagebox.showerror("Error", "Select at least one preference.")
-        return
-
-    sorted_prefs = sorted(list(selected_cells), key=lambda x: (DAYS.index(x[0]), x[1]))
-    preferences[f"{name}"] = sorted_prefs
-
-    with open(FILENAME, "w") as f:
-        json.dump(preferences, f, indent=2)
-
-    messagebox.showinfo("Saved", f"Preferences saved for Teacher {name}")
-    clear_all()
-
+# Clear fields
 def clear_all():
     name_entry.delete(0, tk.END)
+    rank_entry.delete(0, tk.END)
+    year_entry.delete(0, tk.END)
+    course_entry.delete(0, tk.END)
+    code_entry.delete(0, tk.END)
+    credit_entry.delete(0, tk.END)
     for key in selected_cells.copy():
         buttons[key].config(bg="SystemButtonFace")
     selected_cells.clear()
 
-tk.Button(root, text="Save to JSON", command=save_to_json).grid(row=7, column=0, columnspan=8, pady=10)
+# Save all data
+def save_all():
+    name = name_entry.get().strip()
+    rank = rank_entry.get().strip()
+    year = year_entry.get().strip()
+    course = course_entry.get().strip()
+    code = code_entry.get().strip()
+    credit = credit_entry.get().strip()
+
+    if not name or not rank:
+        messagebox.showerror("Error", "Enter both teacher name and rank.")
+        return
+
+    try:
+        rank = int(rank)
+    except ValueError:
+        messagebox.showerror("Error", "Rank must be an integer.")
+        return
+
+    # Save teacher rank
+    teacher_ranks[name] = rank
+    with open(RANK_FILE, "w") as f:
+        json.dump(teacher_ranks, f, indent=2)
+
+    # Save preferences
+    if selected_cells:
+        sorted_prefs = sorted(list(selected_cells), key=lambda x: (DAYS.index(x[0]), x[1]))
+        preferences[name] = sorted_prefs
+        with open(PREF_FILE, "w") as f:
+            json.dump(preferences, f, indent=2)
+
+    # Save course info
+    if year and course and code and credit:
+        try:
+            year = int(year)
+            credit = float(credit)
+            courses.append({
+                "year": year,
+                "code": code,
+                "credit": credit,
+                "teacher": name
+            })
+            with open(COURSE_FILE, "w") as f:
+                json.dump(courses, f, indent=2)
+        except ValueError:
+            messagebox.showerror("Error", "Invalid year or credit format.")
+            return
+
+    messagebox.showinfo("Success", f"All data saved for {name}")
+    clear_all()
+
+# Save button
+tk.Button(root, text="Save All", command=save_all).grid(row=10, column=0, columnspan=8, pady=10)
 
 root.mainloop()
-# //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# ///////////////////////////
 
 with open("courses.json", "r") as f:courses = json.load(f)
 with open("teacher_rank.json", "r") as f:teacher_rank = json.load(f)
@@ -192,10 +273,16 @@ def lab_assign_course(course):
 import openpyxl
 from openpyxl.styles import Alignment, PatternFill, Border, Side
 from openpyxl.utils import get_column_letter
+
+from openpyxl import Workbook
+from openpyxl.styles import PatternFill, Border, Side, Alignment
+from openpyxl.utils import get_column_letter
+
 def printing():
     slot_timings = {
         1: "9:00-10:00", 2: "10:00-11:00", 3: "11:00-12:00",
-        4: "12:00-1:00", 5: "2:00-3:00", 6: "3:00-4:00", 7: "4:00-5:00"
+        4: "12:00-1:00", "Break": "1:00-2:00", 5: "2:00-3:00",
+        6: "3:00-4:00", 7: "4:00-5:00"
     }
     year_colors = {1: "D9E1F2", 2: "E2EFDA", 3: "FFF2CC", 4: "FCE4D6"}
     free_fill = PatternFill(start_color="D9D9D9", end_color="D9D9D9", fill_type="solid")
@@ -204,17 +291,19 @@ def printing():
         top=Side(style='thin'), bottom=Side(style='thin')
     )
 
-    wb = openpyxl.Workbook()
+    wb = Workbook()
     ws = wb.active
     ws.title = "Routine"
-    
+
     ws.cell(row=1, column=1, value="Day").alignment = Alignment(horizontal="center", vertical="center")
     ws.cell(row=1, column=2, value="Year").alignment = Alignment(horizontal="center", vertical="center")
 
-    for slot in range(1, 8):
-        cell = ws.cell(row=1, column=2 + slot, value=slot_timings[slot])
+    col_index = 3
+    for slot in [1, 2, 3, 4, "Break", 5, 6, 7]:
+        cell = ws.cell(row=1, column=col_index, value=slot_timings[slot])
         cell.alignment = Alignment(horizontal="center", vertical="center")
         cell.border = thin_border
+        col_index += 1
 
     current_row = 2
     for day in days:
@@ -231,20 +320,27 @@ def printing():
             year_cell.alignment = Alignment(horizontal="center", vertical="center")
             year_cell.border = thin_border
 
-            for slot in range(1, 8):
-                entry = routine[year][day][slot]
-                if entry:
-                    code, teacher = entry
-                    value = f"{code} ({teacher})"
-                else:
-                    value = "-"  # Prevent merging of truly empty cells
-                cell = ws.cell(row=current_row, column=2 + slot, value=value)
-                if value.strip() == "-":
+            col_index = 3
+            for slot in [1, 2, 3, 4, "Break", 5, 6, 7]:
+                if slot == "Break":
+                    value = "BREAK"
+                    cell = ws.cell(row=current_row, column=col_index, value=value)
                     cell.fill = free_fill
                 else:
-                    cell.fill = PatternFill(start_color=year_colors[year], end_color=year_colors[year], fill_type="solid")
+                    entry = routine[year][day][slot]
+                    if entry:
+                        code, teacher = entry
+                        value = f"{code} ({teacher})"
+                    else:
+                        value = "-"
+                    cell = ws.cell(row=current_row, column=col_index, value=value)
+                    if value.strip() == "-":
+                        cell.fill = free_fill
+                    else:
+                        cell.fill = PatternFill(start_color=year_colors[year], end_color=year_colors[year], fill_type="solid")
                 cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
                 cell.border = thin_border
+                col_index += 1
 
             current_row += 1
 
@@ -255,13 +351,12 @@ def printing():
 
         current_row += 1
 
-    # Merge only non-empty, matching cells
     for row in ws.iter_rows(min_row=2, max_row=ws.max_row):
         col = 3
-        while col <= 9:
+        while col <= 10:
             start_col = col
             value = row[col - 1].value
-            while col + 1 <= 9 and row[col].value == value and value!= "-":
+            while col + 1 <= 10 and row[col].value == value and value not in ["-", "BREAK"]:
                 col += 1
             if col > start_col:
                 ws.merge_cells(
@@ -272,18 +367,14 @@ def printing():
                 merged_cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
             col += 1
 
-    # Set column widths
-    for col in range(1, 10):
+    for col in range(1, 11):
         ws.column_dimensions[get_column_letter(col)].width = 22
 
     wb.save("routine_final.xlsx")
-    print("\n 💕 Final Routine with Time Slots saved as 'routine_final.xlsx'!")
+    print("\n 💕 Final Routine with Time Slots (including Break) saved as 'routine_final.xlsx'!")
 
-
-for course in courses: 
+for course in courses:
     assign_course(course)
-    
+
+
 printing()
-
-
-
