@@ -1,0 +1,14 @@
+[
+  {
+    "year": 1,
+    "code": "101",
+    "credit": 3.0,
+    "teacher": "A"
+  },
+  {
+    "year": 1,
+    "code": "103",
+    "credit": 3.0,
+    "teacher": "B"
+  }
+]

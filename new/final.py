@@ -7,11 +7,14 @@ from openpyxl.utils import get_column_letter
 from openpyxl.styles import Alignment, PatternFill
 from collections import defaultdict
 from openpyxl.styles.borders import Border, Side
+from tkinter import messagebox, ttk
+
+import os
+import json
+import tkinter as tk
+from tkinter import ttk, messagebox
 
 # File paths
-
-
-
 PREF_FILE = "teacher_preferences.json"
 RANK_FILE = "teacher_rank.json"
 COURSE_FILE = "courses.json"
@@ -40,149 +43,194 @@ slot_timings = {
     4: "12:00-1:00", 5: "2:00-3:00", 6: "3:00-4:00", 7: "4:00-5:00"
 }
 
-# Main window
+# Tkinter setup
 root = tk.Tk()
-root.title("Teacher Preferences & Course Info")
-root.geometry("1000x600")
-root.configure(bg="#f0f4f7")
+root.title("Teacher Course & Preference Manager")
+root.geometry("800x400")
+root.configure(bg="#eef5fb")
 
-title = tk.Label(root, text="Teacher Preferences & Course Entry", font=("Helvetica", 16, "bold"), bg="#f0f4f7", fg="#003366")
+DEFAULT_FONT = ("Helvetica", 12)
+LABEL_FONT = ("Helvetica", 12, "bold")
+HEADER_FONT = ("Helvetica", 16, "bold")
+
+title = tk.Label(root, text="Teacher Course & Preference Entry", font=HEADER_FONT,
+                 bg="#eef5fb", fg="#003366")
 title.pack(pady=10)
 
-form_frame = tk.Frame(root, bg="#f0f4f7")
-form_frame.pack(pady=10)
+notebook = ttk.Notebook(root)
+notebook.pack(fill="both", expand=True, padx=10, pady=10)
 
-# --- Teacher Info Section ---
-teacher_frame = tk.LabelFrame(form_frame, text="Teacher Info", font=("Helvetica", 11, "bold"), padx=10, pady=10, bg="#e8f0fe")
-teacher_frame.grid(row=0, column=0, padx=10, sticky="ew")
+# --------------------------------------
+# 1. Teacher Info Tab
+# --------------------------------------
 
-tk.Label(teacher_frame, text="Teacher Name:", bg="#e8f0fe").grid(row=0, column=0, sticky="e", padx=5, pady=5)
-name_entry = tk.Entry(teacher_frame, width=25)
-name_entry.grid(row=0, column=1, padx=5, pady=5)
-
-tk.Label(teacher_frame, text="Rank:", bg="#e8f0fe").grid(row=0, column=2, sticky="e", padx=5, pady=5)
-rank_entry = tk.Entry(teacher_frame, width=8)
-rank_entry.grid(row=0, column=3, padx=5, pady=5)
-
-# --- Course Info Section ---
-course_frame = tk.LabelFrame(form_frame, text="Course Info", font=("Helvetica", 11, "bold"), padx=10, pady=10, bg="#e8f0fe")
-course_frame.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
-
-tk.Label(course_frame, text="Year:", bg="#e8f0fe").grid(row=0, column=0, padx=5, pady=5)
-year_entry = tk.Entry(course_frame, width=5)
-year_entry.grid(row=0, column=1, padx=5, pady=5)
-
-tk.Label(course_frame, text="Course Title:", bg="#e8f0fe").grid(row=0, column=2, padx=5, pady=5)
-course_entry = tk.Entry(course_frame, width=25)
-course_entry.grid(row=0, column=3, padx=5, pady=5)
-
-tk.Label(course_frame, text="Course Code:", bg="#e8f0fe").grid(row=0, column=4, padx=5, pady=5)
-code_entry = tk.Entry(course_frame, width=15)
-code_entry.grid(row=0, column=5, padx=5, pady=5)
-
-tk.Label(course_frame, text="Credit:", bg="#e8f0fe").grid(row=0, column=6, padx=5, pady=5)
-credit_entry = tk.Entry(course_frame, width=5)
-credit_entry.grid(row=0, column=7, padx=5, pady=5)
-
-# --- Slot Preferences ---
-slot_frame = tk.LabelFrame(root, text="Preferred Time Slots", font=("Helvetica", 11, "bold"), padx=10, pady=10, bg="#e8f0fe")
-slot_frame.pack(padx=10, pady=10)
-
-tk.Label(slot_frame, text="", bg="#e8f0fe").grid(row=0, column=0)
-for j, slot in enumerate(SLOTS):
-    tk.Label(slot_frame, text=slot_timings[slot], bg="#e8f0fe", font=("Arial", 9, "bold")).grid(row=0, column=j + 1, padx=4, pady=4)
-
-selected_cells = set()
-buttons = {}
-
-def toggle_cell(day, slot, btn):
-    key = (day, slot)
-    if key in selected_cells:
-        selected_cells.remove(key)
-        btn.config(bg="SystemButtonFace")
-    else:
-        selected_cells.add(key)
-        btn.config(bg="lightgreen")
-
-for i, day in enumerate(DAYS):
-    tk.Label(slot_frame, text=day, bg="#e8f0fe", font=("Arial", 10)).grid(row=i + 1, column=0, padx=5, pady=3)
-    for j, slot in enumerate(SLOTS):
-        btn = tk.Button(slot_frame, text=str(slot), width=6,
-                        command=lambda d=day, s=slot: toggle_cell(d, s, buttons[(d, s)]))
-        btn.grid(row=i + 1, column=j + 1, padx=2, pady=2)
-        buttons[(day, slot)] = btn
-
-# Clear all input fields
-def clear_all():
-    name_entry.delete(0, tk.END)
-    rank_entry.delete(0, tk.END)
-    year_entry.delete(0, tk.END)
-    course_entry.delete(0, tk.END)
-    code_entry.delete(0, tk.END)
-    credit_entry.delete(0, tk.END)
-    for key in selected_cells.copy():
-        buttons[key].config(bg="SystemButtonFace")
-    selected_cells.clear()
-
-# Save data
-def save_all():
-    name = name_entry.get().strip()
-    rank = rank_entry.get().strip()
-    year = year_entry.get().strip()
-    course = course_entry.get().strip()
-    code = code_entry.get().strip()
-    credit = credit_entry.get().strip()
-
+def save_teacher():
+    name = teacher_name_entry.get().strip()
+    rank = teacher_rank_entry.get().strip()
     if not name or not rank:
         messagebox.showerror("Error", "Please enter both teacher name and rank.")
         return
-
     try:
         rank = int(rank)
     except ValueError:
         messagebox.showerror("Error", "Rank must be an integer.")
         return
-
-    # Save teacher rank
     teacher_ranks[name] = rank
     with open(RANK_FILE, "w") as f:
         json.dump(teacher_ranks, f, indent=2)
+    teacher_name_entry.delete(0, tk.END)
+    teacher_rank_entry.delete(0, tk.END)
+    update_dropdowns()
+    messagebox.showinfo("Saved", f"Saved teacher: {name}")
 
-    # Save preferences
-    if selected_cells:
-        sorted_prefs = sorted(list(selected_cells), key=lambda x: (DAYS.index(x[0]), x[1]))
-        preferences[name] = sorted_prefs
-        with open(PREF_FILE, "w") as f:
-            json.dump(preferences, f, indent=2)
+teacher_tab = tk.Frame(notebook, bg="#f4f9ff")
+notebook.add(teacher_tab, text="1. Teacher Info")
 
-    # Save course info
-    if year and course and code and credit:
-        try:
-            year = int(year)
-            credit = float(credit)
-            courses.append({
-                "year": year,
-                "code": code,
-                "credit": credit,
-                "teacher": name
-            })
-            with open(COURSE_FILE, "w") as f:
-                json.dump(courses, f, indent=2)
-        except ValueError:
-            messagebox.showerror("Error", "Invalid year or credit format.")
-            return
+tk.Label(teacher_tab, text="Teacher Name:", font=LABEL_FONT, bg="#f4f9ff").grid(row=0, column=0, padx=10, pady=10, sticky="e")
+teacher_name_entry = tk.Entry(teacher_tab, width=30, font=DEFAULT_FONT)
+teacher_name_entry.grid(row=0, column=1, padx=5)
 
-    messagebox.showinfo("Success", f"Data saved for {name}")
-    clear_all()
+tk.Label(teacher_tab, text="Rank:", font=LABEL_FONT, bg="#f4f9ff").grid(row=0, column=2, padx=10, pady=10, sticky="e")
+teacher_rank_entry = tk.Entry(teacher_tab, width=10, font=DEFAULT_FONT)
+teacher_rank_entry.grid(row=0, column=3, padx=5)
 
-# Save button
-btn_frame = tk.Frame(root, bg="#f0f4f7")
-btn_frame.pack(pady=10)
+tk.Button(teacher_tab, text="Save Teacher", command=save_teacher, bg="#0066cc", fg="white",
+          padx=15, pady=6, font=DEFAULT_FONT).grid(row=1, columnspan=4, pady=15)
 
-tk.Button(btn_frame, text="Save All", command=save_all, bg="#0066cc", fg="white",
-          font=("Helvetica", 11), padx=20, pady=5).pack()
+# --------------------------------------
+# 2. Course Entry Tab
+# --------------------------------------
 
+course_teacher_var = tk.StringVar()
+
+def save_course():
+    teacher = course_teacher_var.get()
+    title = course_title_entry.get().strip()
+    code = course_code_entry.get().strip()
+    credit = course_credit_entry.get().strip()
+    year = course_year_entry.get().strip()
+    if not teacher or not title or not code or not credit or not year:
+        messagebox.showerror("Error", "Please fill in all fields.")
+        return
+    try:
+        credit = float(credit)
+        year = int(year)
+    except ValueError:
+        messagebox.showerror("Error", "Invalid year or credit.")
+        return
+    courses.append({
+        "year": year,
+        "code": code,
+        "title": title,
+        "credit": credit,
+        "teacher": teacher
+    })
+    with open(COURSE_FILE, "w") as f:
+        json.dump(courses, f, indent=2)
+    course_title_entry.delete(0, tk.END)
+    course_code_entry.delete(0, tk.END)
+    course_credit_entry.delete(0, tk.END)
+    course_year_entry.delete(0, tk.END)
+    messagebox.showinfo("Saved", f"Course saved for {teacher}")
+    update_dropdowns()
+
+course_tab = tk.Frame(notebook, bg="#f4f9ff")
+notebook.add(course_tab, text="2. Course Entry")
+
+tk.Label(course_tab, text="Teacher Name:", font=LABEL_FONT, bg="#f4f9ff").grid(row=0, column=0, padx=10, pady=10)
+course_teacher_dropdown = ttk.Combobox(course_tab, textvariable=course_teacher_var, state="readonly", width=27, font=DEFAULT_FONT)
+course_teacher_dropdown.grid(row=0, column=1, padx=5)
+
+tk.Label(course_tab, text="Course Title:", font=LABEL_FONT, bg="#f4f9ff").grid(row=1, column=0, padx=10, pady=10)
+course_title_entry = tk.Entry(course_tab, width=20, font=DEFAULT_FONT)
+course_title_entry.grid(row=1, column=1)
+
+tk.Label(course_tab, text="Course Code:", font=LABEL_FONT, bg="#f4f9ff").grid(row=1, column=2, padx=10)
+course_code_entry = tk.Entry(course_tab, width=20, font=DEFAULT_FONT)
+course_code_entry.grid(row=1, column=3)
+
+tk.Label(course_tab, text="Credit:", font=LABEL_FONT, bg="#f4f9ff").grid(row=2, column=0, padx=10, pady=10)
+course_credit_entry = tk.Entry(course_tab, width=20, font=DEFAULT_FONT)
+course_credit_entry.grid(row=2, column=1)
+
+tk.Label(course_tab, text="Year:", font=LABEL_FONT, bg="#f4f9ff").grid(row=2, column=2, padx=10)
+course_year_entry = tk.Entry(course_tab, width=20, font=DEFAULT_FONT)
+course_year_entry.grid(row=2, column=3)
+
+tk.Button(course_tab, text="Save Course", command=save_course, bg="#0066cc", fg="white",
+          padx=15, pady=6, font=DEFAULT_FONT).grid(row=3, columnspan=4, pady=15)
+
+# --------------------------------------
+# 3. Preferences Tab
+# --------------------------------------
+
+pref_teacher_var = tk.StringVar()
+pref_course_var = tk.StringVar()
+slot_buttons = {}
+selected_slots = set()
+
+def toggle_slot(day, slot):
+    key = (day, slot)
+    if key in selected_slots:
+        selected_slots.remove(key)
+        slot_buttons[key].config(bg="SystemButtonFace")
+    else:
+        selected_slots.add(key)
+        slot_buttons[key].config(bg="lightgreen")
+
+def save_preferences():
+    name = pref_teacher_var.get()
+    if not name:
+        messagebox.showerror("Error", "Select a teacher.")
+        return
+    prefs = sorted(list(selected_slots), key=lambda x: (DAYS.index(x[0]), x[1]))
+    preferences[name] = prefs
+    with open(PREF_FILE, "w") as f:
+        json.dump(preferences, f, indent=2)
+    messagebox.showinfo("Saved", f"Preferences saved for {name}")
+    for key in selected_slots.copy():
+        slot_buttons[key].config(bg="SystemButtonFace")
+    selected_slots.clear()
+
+def update_dropdowns():
+    teacher_list = list(teacher_ranks.keys())
+    course_teacher_dropdown["values"] = teacher_list
+    pref_teacher_dropdown["values"] = teacher_list
+    course_list = [f"{c['code']}" for c in courses]
+    # pref_course_dropdown["values"] = course_list
+
+pref_tab = tk.Frame(notebook, bg="#f4f9ff")
+notebook.add(pref_tab, text="3. Preferences")
+
+tk.Label(pref_tab, text="Select Teacher:", bg="#f4f9ff").grid(row=0, column=0, padx=10, pady=10)
+pref_teacher_dropdown = ttk.Combobox(pref_tab, textvariable=pref_teacher_var, state="readonly", width=25)
+pref_teacher_dropdown.grid(row=0, column=1, padx=5)
+
+# tk.Label(pref_tab, text="Select Course:", bg="#f4f9ff").grid(row=0, column=2, padx=10)
+# pref_course_dropdown = ttk.Combobox(pref_tab, textvariable=pref_course_var, state="readonly", width=25)
+# pref_course_dropdown.grid(row=0, column=3, padx=5)
+
+slot_frame = tk.LabelFrame(pref_tab, text="Preferred Slots", bg="#e8f0fe", font=("Helvetica", 10))
+slot_frame.grid(row=1, column=0, columnspan=4, padx=10, pady=10)
+
+tk.Label(slot_frame, text="", bg="#e8f0fe").grid(row=0, column=0)
+for j, slot in enumerate(SLOTS):
+    tk.Label(slot_frame, text=slot_timings[slot], bg="#e8f0fe").grid(row=0, column=j+1)
+
+for i, day in enumerate(DAYS):
+    tk.Label(slot_frame, text=day, bg="#e8f0fe").grid(row=i+1, column=0)
+    for j, slot in enumerate(SLOTS):
+        btn = tk.Button(slot_frame, text=str(slot), width=6)
+        btn.grid(row=i+1, column=j+1, padx=2, pady=2)
+        btn.config(command=lambda d=day, s=slot, b=btn: toggle_slot(d, s))
+        slot_buttons[(day, slot)] = btn
+
+tk.Button(pref_tab, text="Save Preferences", command=save_preferences, bg="#0066cc", fg="white",
+          padx=20, pady=5).grid(row=2, columnspan=4, pady=10)
+
+update_dropdowns()
 root.mainloop()
+
 
 # ///////////////////////////
 
