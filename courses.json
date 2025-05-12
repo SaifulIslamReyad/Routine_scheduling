@@ -1,0 +1,62 @@
+[
+  {
+    "year": 1,
+    "code": "0715 02 \nME 1251",
+    "credit": 2.0,
+    "teacher": "GR"
+  },
+  {
+    "year": 1,
+    "code": "0715 02 \nME 1253",
+    "credit": 2.0,
+    "teacher": "GR2"
+  },
+  {
+    "year": 1,
+    "code": "0541 02 \nMath-1251",
+    "credit": 3.0,
+    "teacher": "SFA"
+  },
+  {
+    "year": 1,
+    "code": "0714 02 ECE 1251",
+    "credit": 3.0,
+    "teacher": "UJ"
+  },
+  {
+    "year": 1,
+    "code": "CSE 1201",
+    "credit": 3.0,
+    "teacher": "MAR"
+  },
+  {
+    "year": 1,
+    "code": "Chem 1251",
+    "credit": 3.0,
+    "teacher": "AB"
+  },
+  {
+    "year": 1,
+    "code": "Econ 1251",
+    "credit": 2.0,
+    "teacher": "BC"
+  },
+  {
+    "year": 1,
+    "code": "ECE 1252",
+    "credit": 1.0,
+    "teacher": "JU"
+  },
+  {
+    "year": 1,
+    "code": "CSE 1202",
+    "credit": 1.0,
+    "teacher": "AI"
+  },
+  {
+    "year": 1,
+    "code": "CSE 1200",
+    "credit": 1.0,
+    "teacher": "MM"
+  }
+]

@@ -1,0 +1,130 @@
+{
+  "GR": [
+    [
+      "Sunday",
+      4
+    ],
+    [
+      "Tuesday",
+      1
+    ]
+  ],
+  "GR2": [
+    [
+      "Sunday",
+      2
+    ],
+    [
+      "Monday",
+      2
+    ]
+  ],
+  "SFA": [
+    [
+      "Sunday",
+      2
+    ],
+    [
+      "Sunday",
+      3
+    ],
+    [
+      "Monday",
+      2
+    ]
+  ],
+  "UJ": [
+    [
+      "Monday",
+      3
+    ],
+    [
+      "Tuesday",
+      2
+    ],
+    [
+      "Thursday",
+      2
+    ]
+  ],
+  "MAR": [
+    [
+      "Monday",
+      4
+    ],
+    [
+      "Tuesday",
+      4
+    ],
+    [
+      "Wednesday",
+      4
+    ]
+  ],
+  "AB": [
+    [
+      "Tuesday",
+      3
+    ],
+    [
+      "Wednesday",
+      2
+    ],
+    [
+      "Thursday",
+      4
+    ]
+  ],
+  "BC": [
+    [
+      "Wednesday",
+      3
+    ],
+    [
+      "Thursday",
+      3
+    ]
+  ],
+  "JU": [
+    [
+      "Tuesday",
+      5
+    ],
+    [
+      "Tuesday",
+      6
+    ],
+    [
+      "Tuesday",
+      7
+    ]
+  ],
+  "AI": [
+    [
+      "Wednesday",
+      5
+    ],
+    [
+      "Wednesday",
+      6
+    ],
+    [
+      "Wednesday",
+      7
+    ]
+  ],
+  "MM": [
+    [
+      "Thursday",
+      5
+    ],
+    [
+      "Thursday",
+      6
+    ],
+    [
+      "Thursday",
+      7
+    ]
+  ]
+}
