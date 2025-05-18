@@ -1,0 +1,30 @@
+[
+  {
+    "year": 1,
+    "code": "1",
+    "title": "A",
+    "credit": 3.0,
+    "teacher": "A"
+  },
+  {
+    "year": 2,
+    "code": "3",
+    "title": "B",
+    "credit": 3.0,
+    "teacher": "B"
+  },
+  {
+    "year": 3,
+    "code": "5",
+    "title": "C",
+    "credit": 3.0,
+    "teacher": "C"
+  },
+  {
+    "year": 4,
+    "code": "7",
+    "title": "D",
+    "credit": 3.0,
+    "teacher": "D"
+  }
+]
