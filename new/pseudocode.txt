@@ -1,0 +1,18 @@
+function assign_course(course):
+    for preferred slot:
+        if slot is free:
+            assign
+        else:
+            if can reassign existing:
+                move current teacher
+                assign new course
+
+function can_assign(teacher, day, slot):
+    return slot is empty and teacher is free
+
+function reassign_slot(day, slot, requesting_teacher):
+    if current teacher has free alternative:
+        move current class
+        assign new one
+
+        

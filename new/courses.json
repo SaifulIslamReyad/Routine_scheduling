@@ -1,0 +1,254 @@
+[
+  {
+    "year": 1,
+    "code": "ME 1251",
+    "title": "ME 1251",
+    "credit": 2.0,
+    "teacher": "A"
+  },
+  {
+    "year": 1,
+    "code": "ME 1253",
+    "title": "ME 1253",
+    "credit": 2.0,
+    "teacher": "A"
+  },
+  {
+    "year": 1,
+    "code": "Math-1251",
+    "title": "Math-1251",
+    "credit": 3.0,
+    "teacher": "B"
+  },
+  {
+    "year": 1,
+    "code": "ECE 1251",
+    "title": "ECE 1251",
+    "credit": 3.0,
+    "teacher": "C"
+  },
+  {
+    "year": 1,
+    "code": "CSE 1201",
+    "title": "CSE 1201",
+    "credit": 3.0,
+    "teacher": "MAR"
+  },
+  {
+    "year": 1,
+    "code": "Chem 1251",
+    "title": "Chem 1251",
+    "credit": 3.0,
+    "teacher": "KAR"
+  },
+  {
+    "year": 1,
+    "code": "Econ 1251",
+    "title": "Econ 1251",
+    "credit": 2.0,
+    "teacher": "D"
+  },
+  {
+    "year": 1,
+    "code": "ECE 1252",
+    "title": "ECE 1252",
+    "credit": 1.0,
+    "teacher": "C"
+  },
+  {
+    "year": 1,
+    "code": "CSE 1202",
+    "title": "CSE 1202",
+    "credit": 1.0,
+    "teacher": "MAR"
+  },
+  {
+    "year": 1,
+    "code": "CSE 1200",
+    "title": "CSE 1200",
+    "credit": 1.0,
+    "teacher": "MM"
+  },
+  {
+    "year": 2,
+    "code": "CSE-2205",
+    "title": "CSE-2205",
+    "credit": 3.0,
+    "teacher": "AI"
+  },
+  {
+    "year": 2,
+    "code": "ECE 2251",
+    "title": "ECE 2251",
+    "credit": 2.0,
+    "teacher": "F"
+  },
+  {
+    "year": 2,
+    "code": "CSE-2203",
+    "title": "CSE-2203",
+    "credit": 3.0,
+    "teacher": "AS"
+  },
+  {
+    "year": 2,
+    "code": "CSE-2206",
+    "title": "CSE-2206",
+    "credit": 1.0,
+    "teacher": "AI"
+  },
+  {
+    "year": 2,
+    "code": "Math 2251",
+    "title": "Math 2251",
+    "credit": 3.0,
+    "teacher": "SFA"
+  },
+  {
+    "year": 2,
+    "code": "CSE-2201",
+    "title": "CSE-2201",
+    "credit": 3.0,
+    "teacher": "SC"
+  },
+  {
+    "year": 2,
+    "code": "CSE-2202",
+    "title": "CSE-2202",
+    "credit": 1.0,
+    "teacher": "SC"
+  },
+  {
+    "year": 2,
+    "code": "CSE-2204",
+    "title": "CSE-2204",
+    "credit": 1.0,
+    "teacher": "AS"
+  },
+  {
+    "year": 3,
+    "code": "CSE 3108",
+    "title": "CSE 3108",
+    "credit": 3.0,
+    "teacher": "ASMA"
+  },
+  {
+    "year": 3,
+    "code": "CSE 3106",
+    "title": "CSE 3106",
+    "credit": 1.0,
+    "teacher": "AS"
+  },
+  {
+    "year": 3,
+    "code": "CSE 3107",
+    "title": "CSE 3107",
+    "credit": 3.0,
+    "teacher": "ASMA"
+  },
+  {
+    "year": 3,
+    "code": "CSE 3103",
+    "title": "CSE 3103",
+    "credit": 3.0,
+    "teacher": "KMA"
+  },
+  {
+    "year": 3,
+    "code": "CSE 3101",
+    "title": "CSE 3101",
+    "credit": 3.0,
+    "teacher": "SAH"
+  },
+  {
+    "year": 3,
+    "code": "CSE 3105",
+    "title": "CSE 3105",
+    "credit": 3.0,
+    "teacher": "AS"
+  },
+  {
+    "year": 3,
+    "code": "CSE 3102",
+    "title": "CSE 3102",
+    "credit": 1.0,
+    "teacher": "SAH"
+  },
+  {
+    "year": 3,
+    "code": "BA \n3151",
+    "title": "BA \n3151",
+    "credit": 2.0,
+    "teacher": "BA"
+  },
+  {
+    "year": 3,
+    "code": "Stat 3151",
+    "title": "Stat 3151",
+    "credit": 3.0,
+    "teacher": "SG"
+  },
+  {
+    "year": 3,
+    "code": "CSE 3104",
+    "title": "CSE 3104",
+    "credit": 1.0,
+    "teacher": "KMA"
+  },
+  {
+    "year": 4,
+    "code": "BA-4151",
+    "title": "BA-4151",
+    "credit": 2.0,
+    "teacher": "BC"
+  },
+  {
+    "year": 4,
+    "code": "CSE-4121",
+    "title": "CSE-4121",
+    "credit": 3.0,
+    "teacher": "MM"
+  },
+  {
+    "year": 4,
+    "code": "CSE-4103",
+    "title": "CSE-4103",
+    "credit": 3.0,
+    "teacher": "RD"
+  },
+  {
+    "year": 4,
+    "code": "SOC-4153",
+    "title": "SOC-4153",
+    "credit": 2.0,
+    "teacher": "LK"
+  },
+  {
+    "year": 4,
+    "code": "CSE-4123",
+    "title": "CSE-4123",
+    "credit": 3.0,
+    "teacher": "AKM"
+  },
+  {
+    "year": 4,
+    "code": "CSE-4106",
+    "title": "CSE-4106",
+    "credit": 1.0,
+    "teacher": "AKB"
+  },
+  {
+    "year": 4,
+    "code": "CSE-4104",
+    "title": "CSE-4104",
+    "credit": 1.0,
+    "teacher": "RD"
+  },
+  {
+    "year": 4,
+    "code": "CSE 4100",
+    "title": "CSE 4100",
+    "credit": 3.0,
+    "teacher": "MC"
+  }
+]

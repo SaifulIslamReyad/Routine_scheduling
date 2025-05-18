@@ -8,7 +8,6 @@ from openpyxl.styles import Alignment, PatternFill
 from collections import defaultdict
 from openpyxl.styles.borders import Border, Side
 from tkinter import messagebox, ttk
-
 import os
 import json
 import tkinter as tk
@@ -46,7 +45,7 @@ slot_timings = {
 # Tkinter setup
 root = tk.Tk()
 root.title("Teacher Course & Preference Manager")
-root.geometry("800x400")
+root.geometry("900x500")
 root.configure(bg="#eef5fb")
 
 DEFAULT_FONT = ("Helvetica", 12)
@@ -81,7 +80,13 @@ def save_teacher():
     teacher_name_entry.delete(0, tk.END)
     teacher_rank_entry.delete(0, tk.END)
     update_dropdowns()
+    show_teacher_list()
     messagebox.showinfo("Saved", f"Saved teacher: {name}")
+
+def show_teacher_list():
+    teacher_listbox.delete(0, tk.END)
+    for name, rank in sorted(teacher_ranks.items(), key=lambda x: x[1]):
+        teacher_listbox.insert(tk.END, f"{name} (Rank: {rank})")
 
 teacher_tab = tk.Frame(notebook, bg="#f4f9ff")
 notebook.add(teacher_tab, text="1. Teacher Info")
@@ -96,6 +101,10 @@ teacher_rank_entry.grid(row=0, column=3, padx=5)
 
 tk.Button(teacher_tab, text="Save Teacher", command=save_teacher, bg="#0066cc", fg="white",
           padx=15, pady=6, font=DEFAULT_FONT).grid(row=1, columnspan=4, pady=15)
+
+teacher_listbox = tk.Listbox(teacher_tab, font=DEFAULT_FONT, width=60)
+teacher_listbox.grid(row=2, columnspan=4, pady=10)
+show_teacher_list()
 
 # --------------------------------------
 # 2. Course Entry Tab
@@ -131,8 +140,14 @@ def save_course():
     course_code_entry.delete(0, tk.END)
     course_credit_entry.delete(0, tk.END)
     course_year_entry.delete(0, tk.END)
-    messagebox.showinfo("Saved", f"Course saved for {teacher}")
     update_dropdowns()
+    show_course_list()
+    messagebox.showinfo("Saved", f"Course saved for {teacher}")
+
+def show_course_list():
+    course_listbox.delete(0, tk.END)
+    for c in courses:
+        course_listbox.insert(tk.END, f"{c['code']} -  ({c['credit']} cr) [{c['teacher']}]")
 
 course_tab = tk.Frame(notebook, bg="#f4f9ff")
 notebook.add(course_tab, text="2. Course Entry")
@@ -160,12 +175,15 @@ course_year_entry.grid(row=2, column=3)
 tk.Button(course_tab, text="Save Course", command=save_course, bg="#0066cc", fg="white",
           padx=15, pady=6, font=DEFAULT_FONT).grid(row=3, columnspan=4, pady=15)
 
+course_listbox = tk.Listbox(course_tab, font=DEFAULT_FONT, width=80)
+course_listbox.grid(row=4, columnspan=4, pady=10)
+show_course_list()
+
 # --------------------------------------
 # 3. Preferences Tab
 # --------------------------------------
 
 pref_teacher_var = tk.StringVar()
-pref_course_var = tk.StringVar()
 slot_buttons = {}
 selected_slots = set()
 
@@ -192,23 +210,12 @@ def save_preferences():
         slot_buttons[key].config(bg="SystemButtonFace")
     selected_slots.clear()
 
-def update_dropdowns():
-    teacher_list = list(teacher_ranks.keys())
-    course_teacher_dropdown["values"] = teacher_list
-    pref_teacher_dropdown["values"] = teacher_list
-    course_list = [f"{c['code']}" for c in courses]
-    # pref_course_dropdown["values"] = course_list
-
 pref_tab = tk.Frame(notebook, bg="#f4f9ff")
 notebook.add(pref_tab, text="3. Preferences")
 
 tk.Label(pref_tab, text="Select Teacher:", bg="#f4f9ff").grid(row=0, column=0, padx=10, pady=10)
 pref_teacher_dropdown = ttk.Combobox(pref_tab, textvariable=pref_teacher_var, state="readonly", width=25)
 pref_teacher_dropdown.grid(row=0, column=1, padx=5)
-
-# tk.Label(pref_tab, text="Select Course:", bg="#f4f9ff").grid(row=0, column=2, padx=10)
-# pref_course_dropdown = ttk.Combobox(pref_tab, textvariable=pref_course_var, state="readonly", width=25)
-# pref_course_dropdown.grid(row=0, column=3, padx=5)
 
 slot_frame = tk.LabelFrame(pref_tab, text="Preferred Slots", bg="#e8f0fe", font=("Helvetica", 10))
 slot_frame.grid(row=1, column=0, columnspan=4, padx=10, pady=10)
@@ -222,11 +229,20 @@ for i, day in enumerate(DAYS):
     for j, slot in enumerate(SLOTS):
         btn = tk.Button(slot_frame, text=str(slot), width=6)
         btn.grid(row=i+1, column=j+1, padx=2, pady=2)
-        btn.config(command=lambda d=day, s=slot, b=btn: toggle_slot(d, s))
+        btn.config(command=lambda d=day, s=slot: toggle_slot(d, s))
         slot_buttons[(day, slot)] = btn
 
 tk.Button(pref_tab, text="Save Preferences", command=save_preferences, bg="#0066cc", fg="white",
           padx=20, pady=5).grid(row=2, columnspan=4, pady=10)
+
+# --------------------------------------
+# Update dropdowns and run
+# --------------------------------------
+
+def update_dropdowns():
+    teacher_list = list(teacher_ranks.keys())
+    course_teacher_dropdown["values"] = teacher_list
+    pref_teacher_dropdown["values"] = teacher_list
 
 update_dropdowns()
 root.mainloop()
@@ -455,16 +471,3 @@ for course in courses:
 printing()
 
 
-# ME SIR = A
-# MATH SIR = B
-# ECE = C
-# Econ = D
-
-#ECE=F
-
-#BA=BA
-#Stat=SG
-
-#BA=BC
-#Soc=LK
-#CSE 4100=MC
